@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
@@ -20,7 +20,18 @@ const Projects = () => {
   const debouncedSearch = useDebounce(search, 300);
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
+  const { register, handleSubmit, reset, formState: { errors }, watch, setValue } = useForm();
+
+  const watchArea = watch('areaSqFt');
+  const watchRate = watch('ratePerSqFt');
+
+  useEffect(() => {
+    const area = parseFloat(watchArea) || 0;
+    const rate = parseFloat(watchRate) || 0;
+    if (area > 0 && rate > 0) {
+      setValue('totalCost', area * rate);
+    }
+  }, [watchArea, watchRate, setValue]);
 
   const { data: projectsData, isLoading, refetch } = useQuery({
     queryKey: ['projects', debouncedSearch, statusFilter],
@@ -70,6 +81,7 @@ const Projects = () => {
     createMutation.mutate({
       ...data,
       areaSqFt: parseFloat(data.areaSqFt),
+      ratePerSqFt: parseFloat(data.ratePerSqFt) || 0,
       totalCost: parseFloat(data.totalCost),
       paidTillNow: parseFloat(data.paidTillNow) || 0,
       serviceType: Array.isArray(data.serviceType) ? data.serviceType : [data.serviceType],
@@ -292,49 +304,57 @@ const Projects = () => {
               )}
             </div>
           </div>
+<div className="form-row">
+  <div className="form-group">
+    <label>Area (sqft) *</label>
+    <input
+      {...register('areaSqFt', { required: 'Area is required', valueAsNumber: true })}
+      type="number"
+      placeholder="1200"
+    />
+    {errors.areaSqFt && (
+      <p className="text-danger" style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>
+        {errors.areaSqFt.message}
+      </p>
+    )}
+  </div>
+  <div className="form-group">
+    <label>Rate per SqFt (₹)</label>
+    <input
+      {...register('ratePerSqFt', { valueAsNumber: true })}
+      type="number"
+      placeholder="85"
+    />
+  </div>
+</div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Area (sqft) *</label>
-              <input
-                {...register('areaSqFt', { required: 'Area is required', valueAsNumber: true })}
-                type="number"
-                placeholder="1200"
-              />
-              {errors.areaSqFt && (
-                <p className="text-danger" style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                  {errors.areaSqFt.message}
-                </p>
-              )}
-            </div>
-            <div className="form-group">
-              <label>Total Cost (₹) *</label>
-              <input
-                {...register('totalCost', { required: 'Total cost is required', valueAsNumber: true })}
-                type="number"
-                placeholder="100000"
-              />
-              {errors.totalCost && (
-                <p className="text-danger" style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                  {errors.totalCost.message}
-                </p>
-              )}
-            </div>
-          </div>
+<div className="form-row">
+  <div className="form-group">
+    <label>Total Cost (₹) *</label>
+    <input
+      {...register('totalCost', { required: 'Total cost is required', valueAsNumber: true })}
+      type="number"
+      placeholder="100000"
+    />
+    {errors.totalCost && (
+      <p className="text-danger" style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>
+        {errors.totalCost.message}
+      </p>
+    )}
+  </div>
+  <div className="form-group">
+    <label>Paid Till Now (₹)</label>
+    <input
+      {...register('paidTillNow', { valueAsNumber: true })}
+      type="number"
+      placeholder="30000"
+    />
+  </div>
+</div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Paid Till Now (₹)</label>
-              <input
-                {...register('paidTillNow', { valueAsNumber: true })}
-                type="number"
-                placeholder="30000"
-              />
-            </div>
-            <div className="form-group">
-              <label>Start Date</label>
-              <input {...register('startDate')} type="date" />
-            </div>
+          <div className="form-group">
+            <label>Start Date</label>
+            <input {...register('startDate')} type="date" />
           </div>
 
           <div className="form-group">

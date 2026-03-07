@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/api';
@@ -23,7 +23,18 @@ const ProjectDetail = () => {
   const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().split('T')[0]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, formState: { errors: editErrors }, watch } = useForm();
+  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, formState: { errors: editErrors }, watch, setValue: setEditValue } = useForm();
+
+  const watchArea = watch('areaSqFt');
+  const watchRate = watch('ratePerSqFt');
+
+  useEffect(() => {
+    const area = parseFloat(watchArea) || 0;
+    const rate = parseFloat(watchRate) || 0;
+    if (area > 0 && rate > 0) {
+      setEditValue('totalCost', area * rate);
+    }
+  }, [watchArea, watchRate, setEditValue]);
 
   const { data: projectData, isLoading, refetch } = useQuery({
     queryKey: ['project', id],
@@ -183,6 +194,7 @@ const ProjectDetail = () => {
       city: project.city || '',
       serviceType: project.serviceType?.[0] || 'Waterproofing',
       areaSqFt: project.areaSqFt,
+      ratePerSqFt: project.ratePerSqFt || 0,
       totalCost: project.totalCost,
       paidTillNow: project.paidTillNow || 0,
       startDate: project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
@@ -202,6 +214,7 @@ const ProjectDetail = () => {
     updateProjectMutation.mutate({
       ...data,
       areaSqFt: parseFloat(data.areaSqFt),
+      ratePerSqFt: parseFloat(data.ratePerSqFt) || 0,
       totalCost: parseFloat(data.totalCost),
       paidTillNow: parseFloat(data.paidTillNow) || 0,
       serviceType: [data.serviceType]
@@ -302,7 +315,7 @@ const ProjectDetail = () => {
           </div>
           <div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Area</p>
-            <p>{project.areaSqFt} sqft</p>
+            <p>{project.areaSqFt} sqft {project.ratePerSqFt > 0 && `(@ ₹${project.ratePerSqFt})`}</p>
           </div>
           <div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Start Date</p>
@@ -638,39 +651,47 @@ const ProjectDetail = () => {
               </select>
             </div>
           </div>
+<div className="form-row">
+  <div className="form-group">
+    <label>Area (sqft) *</label>
+    <input
+      {...registerEdit('areaSqFt', { required: 'Area is required', valueAsNumber: true })}
+      type="number"
+      placeholder="1200"
+    />
+  </div>
+  <div className="form-group">
+    <label>Rate per SqFt (₹)</label>
+    <input
+      {...registerEdit('ratePerSqFt', { valueAsNumber: true })}
+      type="number"
+      placeholder="85"
+    />
+  </div>
+</div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Area (sqft) *</label>
-              <input
-                {...registerEdit('areaSqFt', { required: 'Area is required', valueAsNumber: true })}
-                type="number"
-                placeholder="1200"
-              />
-            </div>
-            <div className="form-group">
-              <label>Total Cost (₹) *</label>
-              <input
-                {...registerEdit('totalCost', { required: 'Total cost is required', valueAsNumber: true })}
-                type="number"
-                placeholder="100000"
-              />
-            </div>
-          </div>
+<div className="form-row">
+  <div className="form-group">
+    <label>Total Cost (₹) *</label>
+    <input
+      {...registerEdit('totalCost', { required: 'Total cost is required', valueAsNumber: true })}
+      type="number"
+      placeholder="100000"
+    />
+  </div>
+  <div className="form-group">
+    <label>Paid Till Now (₹)</label>
+    <input
+      {...registerEdit('paidTillNow', { valueAsNumber: true })}
+      type="number"
+      placeholder="30000"
+    />
+  </div>
+</div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Paid Till Now (₹)</label>
-              <input
-                {...registerEdit('paidTillNow', { valueAsNumber: true })}
-                type="number"
-                placeholder="30000"
-              />
-            </div>
-            <div className="form-group">
-              <label>Start Date</label>
-              <input {...registerEdit('startDate')} type="date" />
-            </div>
+          <div className="form-group">
+            <label>Start Date</label>
+            <input {...registerEdit('startDate')} type="date" />
           </div>
 
           <div className="form-group">

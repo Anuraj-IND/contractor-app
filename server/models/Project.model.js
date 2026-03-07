@@ -7,6 +7,7 @@ const ProjectSchema = new mongoose.Schema({
   city: { type: String },
   serviceType: [{ type: String, enum: ['Waterproofing', 'Heatproofing'] }],
   areaSqFt: { type: Number, required: true },
+  ratePerSqFt: { type: Number, default: 0 },
   totalCost: { type: Number, required: true },
   paidTillNow: { type: Number, default: 0 },
   amountReceivable: { type: Number },
