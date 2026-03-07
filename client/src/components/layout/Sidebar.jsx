@@ -88,7 +88,7 @@ const Sidebar = () => {
           transition: 'width 0.3s ease',
           display: 'flex',
           flexDirection: 'column',
-          zIndex: 50
+          zIndex: 1000 // Increased z-index to stay above everything on mobile
         }}
         className={`sidebar ${mobileOpen ? 'mobile-open' : ''} ${collapsed ? 'collapsed' : ''}`}
       >
@@ -142,10 +142,14 @@ const Sidebar = () => {
         </nav>
 
         {/* User info & Logout */}
-        <div style={{
-          padding: '1rem 1.5rem',
-          borderTop: `1px solid var(--border)`
-        }}>
+        <div 
+          className="sidebar-footer"
+          style={{
+            padding: '1rem 1.5rem',
+            borderTop: `1px solid var(--border)`,
+            backgroundColor: 'var(--bg-card)'
+          }}
+        >
           {!collapsed && (
             <div style={{ marginBottom: '1rem' }}>
               <p style={{ fontWeight: 600 }}>{user?.name}</p>
@@ -185,18 +189,25 @@ const Sidebar = () => {
         @media (max-width: 768px) {
           .mobile-menu-btn {
             display: block !important;
+            z-index: 1001 !important;
           }
           
           .sidebar-overlay {
             display: block !important;
+            z-index: 999 !important;
           }
           
           .sidebar {
             transform: translateX(-100%);
+            width: 280px !important;
           }
           
           .sidebar.mobile-open {
             transform: translateX(0);
+          }
+
+          .sidebar-footer {
+            padding-bottom: 2rem !important; /* Extra padding for mobile bottom bars */
           }
         }
       `}</style>
