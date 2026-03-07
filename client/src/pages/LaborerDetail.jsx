@@ -115,7 +115,7 @@ const LaborerDetail = () => {
             <DollarSign size={24} />
           </div>
           <div className="stat-info">
-            <p className="stat-label">Daily Wage</p>
+            <p className="stat-label">Default Wage</p>
             <p className="stat-value">{formatCurrency(laborer.defaultDailyWage)}</p>
           </div>
         </div>
@@ -125,8 +125,8 @@ const LaborerDetail = () => {
             <Clock size={24} />
           </div>
           <div className="stat-info">
-            <p className="stat-label">Total Earned</p>
-            <p className="stat-value">{balanceLoading ? '...' : formatCurrency(balanceData?.totalEarned || 0)}</p>
+            <p className="stat-label">Total Paid</p>
+            <p className="stat-value">{balanceLoading ? '...' : formatCurrency(balanceData?.totalPaid || 0)}</p>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ const LaborerDetail = () => {
             <DollarSign size={24} />
           </div>
           <div className="stat-info">
-            <p className="stat-label">Outstanding Balance</p>
+            <p className="stat-label">Left to Pay</p>
             <p className={`stat-value ${(balanceData?.balance || 0) > 0 ? 'text-danger' : 'text-success'}`}>
               {balanceLoading ? '...' : formatCurrency(balanceData?.balance || 0)}
             </p>
