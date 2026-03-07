@@ -264,16 +264,23 @@ const ProjectDetail = () => {
 
   return (
     <PageWrapper title="Project Details">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <button
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <Button
+          variant="secondary"
           onClick={() => navigate('/projects')}
-          className="btn btn-secondary btn-sm"
+          size="sm"
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '100px', justifyContent: 'center' }}
         >
-          <ArrowLeft size={16} /> Back to Projects
-        </button>
+          <ArrowLeft size={16} /> Back
+        </Button>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <Button variant="secondary" onClick={handleEdit} size="sm">
-            <Edit2 size={16} /> Edit Project
+          <Button 
+            variant="secondary" 
+            onClick={handleEdit} 
+            size="sm"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '100px', justifyContent: 'center' }}
+          >
+            <Edit2 size={16} /> Edit
           </Button>
           <Button 
             variant="danger" 
@@ -281,6 +288,7 @@ const ProjectDetail = () => {
             size="sm" 
             loading={deleteProjectMutation.isPending}
             disabled={project.amountReceivable > 0}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '100px', justifyContent: 'center' }}
             title={project.amountReceivable > 0 ? `Cannot delete with outstanding balance: ${formatCurrency(project.amountReceivable)}` : 'Delete Project'}
           >
             <Trash2 size={16} /> Delete
