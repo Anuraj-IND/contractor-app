@@ -207,7 +207,7 @@ const Sidebar = () => {
           }
 
           .sidebar-footer {
-            padding-bottom: 2rem !important; /* Extra padding for mobile bottom bars */
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
           }
         }
       `}</style>

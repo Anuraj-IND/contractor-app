@@ -22,6 +22,7 @@ const BottomNav = () => {
         display: 'flex',
         justifyContent: 'space-around',
         padding: '0.5rem 0',
+        paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))',
         zIndex: 50,
         display: 'none'
       }}
