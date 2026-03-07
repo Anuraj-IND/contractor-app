@@ -207,7 +207,7 @@ const Sidebar = () => {
           }
 
           .sidebar-footer {
-            padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+            padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
           }
         }
       `}</style>
