@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../utils/api';
 import PageWrapper from '../components/layout/PageWrapper';
@@ -15,6 +16,7 @@ const Laborers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLaborer, setEditingLaborer] = useState(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { register, handleSubmit, reset, formState: { errors }, watch } = useForm();
 
@@ -122,7 +124,7 @@ const Laborers = () => {
       header: 'Actions',
       render: (row) => (
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button onClick={() => window.location.href = `/laborers/${row._id}`} className="btn btn-secondary btn-sm">
+          <button onClick={() => navigate(`/laborers/${row._id}`)} className="btn btn-secondary btn-sm">
             <Eye size={16} />
           </button>
           <button onClick={() => handleEdit(row)} className="btn btn-secondary btn-sm">

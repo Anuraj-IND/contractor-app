@@ -19,6 +19,7 @@ import Invoices from './pages/Invoices';
 import SiteImages from './pages/SiteImages';
 import Settings from './pages/Settings';
 import LaborerHome from './pages/LaborerHome';
+import LaborerDetail from './pages/LaborerDetail';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,6 +100,14 @@ function App() {
               element={
                 <ProtectedRoute adminOnly>
                   <Laborers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/laborers/:id"
+              element={
+                <ProtectedRoute adminOnly>
+                  <LaborerDetail />
                 </ProtectedRoute>
               }
             />
